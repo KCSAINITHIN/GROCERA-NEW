@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart - Grocera</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      padding-bottom: 80px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    header {
+      background-color: #2ecc71;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .item-info {
+      flex: 1;
+    }
+
+    .item-name {
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .item-price {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quantity-btn {
+      background: #f0f0f0;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      color: #e74c3c;
+      cursor: pointer;
+      margin-left: 15px;
+      font-size: 14px;
+    }
+
+    .summary {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .checkout-btn {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px 0;
+      color: #666;
+    }
+
+    .continue-shopping {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    /* New Address Section Styles */
+    .address-section {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .address-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .form-group input:read-only {
+      background: #f5f5f5;
+    }
+
+    .error-message {
+      color: #e74c3c;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .validate-btn {
+      background: #f39c12;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      width: 100%;
+    }
+
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      background: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 10px 0;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #888;
+      font-size: 12px;
+    }
+
+    .nav-item i {
+      font-size: 20px;
+      margin-bottom: 5px;
+    }
+
+    .nav-item.active {
+      color: #2ecc71;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🛒 Your Shopping Cart</h1>
+  </header>
+
+  <div class="container">
+    <!-- New Address Section -->
+    <div class="address-section">
+      <h3><i class="fas fa-map-marker-alt"></i> Delivery Address</h3>
+      <div class="address-form">
+        <div class="form-group full-width">
+          <label for="doorNo">Door/Building No.*</label>
+          <input type="text" id="doorNo" placeholder="e.g., 12, ABC Apartments" required>
+          <div id="doorNoError" class="error-message">Please enter building number</div>
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="street">Street Name*</label>
+          <input type="text" id="street" placeholder="e.g., MG Road" required>
+          <div id="streetError" class="error-message">Please enter street name</div>
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="area">Area/Locality*</label>
+          <input type="text" id="area" placeholder="e.g., Shivajinagar" required>
+          <div id="areaError" class="error-message">Please enter locality</div>
+        </div>
+        
+        <div class="form-group">
+          <label for="city">City*</label>
+          <input type="text" id="city" value="Bangalore" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="state">State*</label>
+          <input type="text" id="state" value="Karnataka" readonly>
+        </div>
+        
+        <div class="form-group">
+          <label for="pincode">Pincode*</label>
+          <input type="text" id="pincode" placeholder="560001" pattern="[0-9]{6}" required>
+          <div id="pincodeError" class="error-message">Enter 6-digit Bangalore pincode</div>
+        </div>
+        
+        <div class="form-group full-width">
+          <label for="landmark">Landmark (Optional)</label>
+          <input type="text" id="landmark" placeholder="e.g., Near Metro Station">
+        </div>
+      </div>
+      <button class="validate-btn" onclick="validateAddress()">
+        <i class="fas fa-check-circle"></i> Validate Address
+      </button>
+      <div id="addressError" class="error-message" style="text-align: center;"></div>
+    </div>
+
+    <div id="cartItems"></div>
+    <div id="summary" class="summary" style="display: none;"></div>
+    <button id="checkoutBtn" class="checkout-btn" style="display: none;">Proceed to Checkout</button>
+    <div id="emptyCart" class="empty-cart">
+      <h3>Your cart is empty</h3>
+      <p>Looks like you haven't added anything to your cart yet</p>
+      <button class="continue-shopping" onclick="window.location.href='dashboard.html'">Continue Shopping</button>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <a href="dashboard.html" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="categories.html" class="nav-item">
+      <i class="fas fa-list"></i>
+      <span>Categories</span>
+    </a>
+    <a href="cart.html" class="nav-item active">
+      <i class="fas fa-shopping-cart"></i>
+      <span>Cart</span>
+    </a>
+    <a href="payment.html" class="nav-item">
+      <i class="fas fa-credit-card"></i>
+      <span>Payment</span>
+    </a>
+    <a href="orders.html" class="nav-item">
+      <i class="fas fa-box"></i>
+      <span>Orders</span>
+    </a>
+    <a href="about.html" class="nav-item">
+      <i class="fas fa-user"></i>
+      <span>Account</span>
+    </a>
+  </div>
+
+  <script>
+    // Load cart items
+    function loadCart() {
+      const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const container = document.getElementById("cartItems");
+      const summary = document.getElementById("summary");
+      const checkoutBtn = document.getElementById("checkoutBtn");
+      const emptyCart = document.getElementById("emptyCart");
+
+      container.innerHTML = "";
+
+      if (cart.length === 0) {
+        emptyCart.style.display = "block";
+        summary.style.display = "none";
+        checkoutBtn.style.display = "none";
+        return;
+      }
+
+      emptyCart.style.display = "none";
+      summary.style.display = "block";
+      checkoutBtn.style.display = "block";
+
+      let subtotal = 0;
+
+      cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "cart-item";
+        itemDiv.innerHTML = `
+          <div class="item-info">
+            <div class="item-name">${item.name}</div>
+            <div class="item-price">₹${item.price.toFixed(2)} each</div>
+          </div>
+          <div class="item-quantity">
+            <button class="quantity-btn" onclick="changeQuantity(${index}, -1)">-</button>
+            <span>${item.quantity}</span>
+            <button class="quantity-btn" onclick="changeQuantity(${index}, 1)">+</button>
+          </div>
+          <div>₹${itemTotal.toFixed(2)}</div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        `;
+        container.appendChild(itemDiv);
+      });
+
+      const gst = subtotal * 0.1;
+      const discount = subtotal >= 500 ? subtotal * 0.1 : 0;
+      const delivery = subtotal >= 1000 ? 0 : 50;
+      const total = subtotal + gst - discount + delivery;
+
+      summary.innerHTML = `
+        <div class="summary-row"><span>Subtotal:</span><span>₹${subtotal.toFixed(2)}</span></div>
+        <div class="summary-row"><span>GST (10%):</span><span>₹${gst.toFixed(2)}</span></div>
+        <div class="summary-row"><span>Discount:</span><span>-₹${discount.toFixed(2)}</span></div>
+        <div class="summary-row"><span>Delivery:</span><span>${delivery === 0 ? 'FREE' : '₹' + delivery.toFixed(2)}</span></div>
+        <div class="summary-row"><span>Total:</span><span>₹${total.toFixed(2)}</span></div>
+      `;
+
+      localStorage.setItem("orderTotal", total.toFixed(2));
+    }
+
+    // Address Validation
+    function validateAddress() {
+      const doorNo = document.getElementById("doorNo").value.trim();
+      const street = document.getElementById("street").value.trim();
+      const area = document.getElementById("area").value.trim();
+      const pincode = document.getElementById("pincode").value.trim();
+      const errorEl = document.getElementById("addressError");
+      
+      // Reset errors
+      document.querySelectorAll(".error-message").forEach(el => el.style.display = "none");
+      errorEl.textContent = "";
+      
+      // Validate fields
+      let isValid = true;
+      
+      if (!doorNo) {
+        document.getElementById("doorNoError").style.display = "block";
+        isValid = false;
+      }
+      
+      if (!street) {
+        document.getElementById("streetError").style.display = "block";
+        isValid = false;
+      }
+      
+      if (!area) {
+        document.getElementById("areaError").style.display = "block";
+        isValid = false;
+      }
+      
+      if (!pincode.match(/^\d{6}$/) || !pincode.startsWith('56') && !pincode.startsWith('57') && !pincode.startsWith('58') && !pincode.startsWith('59') && !pincode.startsWith('60')) {
+        document.getElementById("pincodeError").style.display = "block";
+        errorEl.textContent = "We only deliver in Bangalore (Pincodes: 56xxxx-60xxxx)";
+        isValid = false;
+      }
+      
+      if (isValid) {
+    const fullAddress = `${doorNo}, ${street}, ${area}, Bangalore, Karnataka - ${pincode}`;
+    localStorage.setItem("deliveryAddress", fullAddress);
+    localStorage.setItem("addressValidated", "true"); // Add this line
+    document.querySelector(".address-section").style.display = "none"; // Hide address section
+    errorEl.textContent = "";
+    alert("✓ Address validated for Bangalore delivery!");
+    return true;
+  }
+  return false;
+}
+
+// Add this at the end of loadCart() function
+if (localStorage.getItem("addressValidated") === "true") {
+  document.querySelector(".address-section").style.display = "none";
+}
+    
+
+    // Cart functions
+    function changeQuantity(index, delta) {
+      let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      cart[index].quantity += delta;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      localStorage.setItem("cartItems", JSON.stringify(cart));
+      loadCart();
+    }
+
+    function removeItem(index) {
+      let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      cart.splice(index, 1);
+      localStorage.setItem("cartItems", JSON.stringify(cart));
+      loadCart();
+    }
+
+    // Checkout with address validation
+    document.getElementById("checkoutBtn").addEventListener("click", function() {
+      if (!validateAddress()) {
+        return;
+      }
+      const total = parseFloat(localStorage.getItem("orderTotal")) || 0;
+      if (total > 0) {
+        window.location.href = "payment.html";
+      }
+    });
+
+    // Load cart on page load
+    document.addEventListener("DOMContentLoaded", loadCart);
+  </script>
+</body>
+</html>
