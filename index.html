@@ -2,109 +2,594 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Login - GROCERA</title>
+  <title>Login - FreshGrocer</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #2ecc71;
+      --primary-dark: #27ae60;
+      --secondary-color: #f39c12;
+      --light-color: #f5f5f5;
+      --dark-color: #34495e;
+      --error-color: #e74c3c;
+      --google-red: #db4437;
+      --facebook-blue: #4267B2;
+      --apple-black: #000000;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-image: url('background.jpg'); /* Use your groceries background image */
+      font-family: 'Poppins', sans-serif;
+      background-image: url('https://images.unsplash.com/photo-1606787366850-de6330128bfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
       background-size: cover;
       background-position: center;
-      height: 100vh;
+      background-attachment: fixed;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      color: var(--dark-color);
+      position: relative;
+    }
+
+    .login-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 0;
+    }
+
+    .login-container {
+      display: flex;
+      max-width: 1000px;
+      width: 90%;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+      min-height: 600px;
+    }
+
+    .login-image {
+      flex: 1;
+      background-image: url('https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+      display: none;
+      position: relative;
+    }
+
+    .login-image::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.4) 0%, rgba(46, 204, 113, 0.1) 100%);
+    }
+
+    .login-image-content {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      color: white;
+      z-index: 2;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+      max-width: 80%;
+    }
+
+    .login-image-content h3 {
+      font-size: 28px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .login-image-content p {
+      font-size: 16px;
+      opacity: 0.9;
+      line-height: 1.6;
+    }
+
+    @media (min-width: 768px) {
+      .login-image {
+        display: block;
+      }
     }
 
     .login-box {
+      flex: 1;
+      padding: 50px 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
       background-color: rgba(255, 255, 255, 0.95);
-      padding: 30px 25px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-      width: 300px;
-      text-align: center;
+      backdrop-filter: blur(5px);
     }
 
-    .login-box img {
-      width: 150px;
-      margin-bottom: 15px;
+    @media (min-width: 768px) {
+      .login-box {
+        background-color: white;
+        backdrop-filter: none;
+        max-width: 500px;
+      }
+    }
+
+    .logo {
+      width: 160px;
+      margin-bottom: 30px;
     }
 
     .login-box h2 {
-      margin-bottom: 20px;
-      color: #007bff;
+      margin-bottom: 30px;
+      color: var(--primary-color);
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
     }
 
-    .login-box input {
+    .login-box h2 span {
+      color: var(--secondary-color);
+    }
+
+    .login-form {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      max-width: 350px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
       font-size: 16px;
+      transition: all 0.3s;
+      background-color: rgba(255,255,255,0.8);
     }
 
-    .login-box button {
+    .form-group input:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(46, 204, 113, 0.2);
+      outline: none;
+      background-color: white;
+    }
+
+    .login-btn {
       width: 100%;
-      padding: 12px;
-      background-color: #007bff;
+      padding: 16px;
+      background-color: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 10px;
       font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    .login-box button:hover {
-      background-color: #0056b3;
+    .login-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+    }
+
+    .login-btn:active {
+      transform: translateY(0);
+    }
+
+    .login-btn:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
     }
 
     .signup-link {
-      margin-top: 10px;
-      font-size: 14px;
+      margin-top: 25px;
+      text-align: center;
+      font-size: 15px;
+      color: #555;
     }
 
     .signup-link a {
-      color: #007bff;
+      color: var(--primary-color);
       text-decoration: none;
+      font-weight: 500;
+    }
+
+    .signup-link a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: var(--error-color);
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .forgot-password {
+      display: block;
+      text-align: right;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .forgot-password a {
+      color: #666;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .forgot-password a:hover {
+      text-decoration: underline;
+      color: var(--primary-color);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: #777;
+      font-size: 14px;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .divider::before {
+      margin-right: 15px;
+    }
+
+    .divider::after {
+      margin-left: 15px;
+    }
+
+    .social-login {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      color: white;
+      max-width: 120px;
+    }
+
+    .social-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .social-btn:active {
+      transform: translateY(0);
+    }
+
+    .social-btn img {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
+    }
+
+    .google-btn {
+      background-color: var(--google-red);
+    }
+
+    .google-btn:hover {
+      background-color: #c23321;
+    }
+
+    .facebook-btn {
+      background-color: var(--facebook-blue);
+    }
+
+    .facebook-btn:hover {
+      background-color: #365899;
+    }
+
+    .apple-btn {
+      background-color: var(--apple-black);
+    }
+
+    .apple-btn:hover {
+      background-color: #333;
     }
   </style>
 </head>
 <body>
-
-  <div class="login-box">
-    <img src="logo.png" alt="GROCERA Logo" />
-    <h2>Login to GROCERA</h2>
-    <form id="loginForm">
-      <input type="email" id="email" placeholder="Email" required />
-      <input type="password" id="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <div class="signup-link">
-      Don't have an account? <a href="signup.html">Sign up</a>
+  <div class="login-overlay"></div>
+  
+  <div class="login-container">
+    <div class="login-image">
+      <div class="login-image-content">
+        <h3>FreshGrocer Marketplace</h3>
+        <p>Discover the freshest produce, highest quality meats, and pantry essentials delivered straight to your door.</p>
+      </div>
+    </div>
+    
+    <div class="login-box">
+      <img src="https://via.placeholder.com/160x60?text=FreshGrocer" alt="FreshGrocer Logo" class="logo" />
+      <h2>Welcome to <span>FreshGrocer</span></h2>
+      
+      <form id="loginForm" class="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
+          <div class="error-message" id="email-error"></div>
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+          <div class="error-message" id="password-error"></div>
+          <div class="forgot-password">
+            <a href="forgot-password.html">Forgot password?</a>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-btn" id="loginBtn">
+          <span id="btnText">Login</span>
+        </button>
+        
+        <div class="divider">Or continue with</div>
+        
+        <div class="social-login">
+          <button type="button" class="social-btn google-btn" id="googleLogin">
+            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Google" />
+            Google
+          </button>
+          <button type="button" class="social-btn facebook-btn" id="facebookLogin">
+            <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook" />
+            Facebook
+          </button>
+          <button type="button" class="social-btn apple-btn" id="appleLogin">
+            <img src="https://cdn-icons-png.flaticon.com/512/731/731985.png" alt="Apple" />
+            Apple
+          </button>
+        </div>
+      </form>
+      
+      <div class="signup-link">
+        Don't have an account? <a href="signup.html">Create one</a>
+      </div>
     </div>
   </div>
 
-  <script>
-    document.getElementById("loginForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+ <script>
+  // Initialize Supabase client
+  const supabaseUrl = "https://vqkrcubtvblcsydpzatu.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxa3JjdWJ0dmJsY3N5ZHB6YXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI2NzE1MzksImV4cCI6MjA2ODI0NzUzOX0.J0CI6yWIG4hfC0Hl9j2ZxDGV11t_VQQup3NDkbSq5aU";
+  const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+  // DOM elements
+  const loginForm = document.getElementById('loginForm');
+  const emailInput = document.getElementById('email');
+  const passwordInput = document.getElementById('password');
+  const emailError = document.getElementById('email-error');
+  const passwordError = document.getElementById('password-error');
+  const loginBtn = document.getElementById('loginBtn');
+  const btnText = document.getElementById('btnText');
+  const googleLoginBtn = document.getElementById('googleLogin');
+  const facebookLoginBtn = document.getElementById('facebookLogin');
+  const appleLoginBtn = document.getElementById('appleLogin');
 
-      const storedEmail = localStorage.getItem("userEmail");
-      const storedPassword = localStorage.getItem("userPassword");
+  // Store original button HTML for social logins
+  const originalGoogleHtml = googleLoginBtn.innerHTML;
+  const originalFacebookHtml = facebookLoginBtn.innerHTML;
+  const originalAppleHtml = appleLoginBtn.innerHTML;
 
-      if (email === storedEmail && password === storedPassword) {
-        localStorage.setItem("isLoggedIn", "true");
-        alert("Login successful!");
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Incorrect email or password.");
+  // Form submission handler
+  loginForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Reset error messages
+    emailError.style.display = 'none';
+    passwordError.style.display = 'none';
+    
+    // Validate inputs
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    
+    if (!email) {
+      emailError.textContent = 'Email is required';
+      emailError.style.display = 'block';
+      return;
+    }
+    
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+      emailError.textContent = 'Please enter a valid email address';
+      emailError.style.display = 'block';
+      return;
+    }
+    
+    if (!password) {
+      passwordError.textContent = 'Password is required';
+      passwordError.style.display = 'block';
+      return;
+    }
+    
+    if (password.length < 6) {
+      passwordError.textContent = 'Password must be at least 6 characters';
+      passwordError.style.display = 'block';
+      return;
+    }
+    
+    // Show loading state
+    loginBtn.disabled = true;
+    btnText.innerHTML = `<span class="spinner"></span> Logging in...`;
+    
+    try {
+      // Sign in with Supabase
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+      
+      if (error) {
+        throw error;
       }
-    });
-  </script>
+      
+      // Store user ID in localStorage
+      localStorage.setItem("user_id", data.user.id);
+      localStorage.setItem("user_email", data.user.email);
+      
+      // Show success message and redirect
+      alert("Login successful! Welcome back.");
+      window.location.href = "dashboard.html";
+    } catch (error) {
+      // Handle errors
+      loginBtn.disabled = false;
+      btnText.textContent = 'Login';
+      
+      if (error.message.includes('Email')) {
+        emailError.textContent = error.message;
+        emailError.style.display = 'block';
+      } else if (error.message.includes('Password')) {
+        passwordError.textContent = error.message;
+        passwordError.style.display = 'block';
+      } else if (error.message.includes('credentials')) {
+        passwordError.textContent = 'Invalid email or password';
+        passwordError.style.display = 'block';
+      } else {
+        alert("Login error: " + error.message);
+      }
+    }
+  });
 
+  // Enhanced social login handler
+  const handleSocialLogin = async (provider) => {
+    let btn, originalHtml;
+    
+    switch(provider) {
+      case 'google':
+        btn = googleLoginBtn;
+        originalHtml = originalGoogleHtml;
+        break;
+      case 'facebook':
+        btn = facebookLoginBtn;
+        originalHtml = originalFacebookHtml;
+        break;
+      case 'apple':
+        btn = appleLoginBtn;
+        originalHtml = originalAppleHtml;
+        break;
+    }
+    
+    try {
+      // Add loading state to the button
+      btn.innerHTML = `<span class="spinner"></span> Connecting...`;
+      btn.disabled = true;
+      
+      // Sign in with OAuth
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: provider,
+        options: {
+          redirectTo: window.location.origin + '/dashboard.html',
+          // Additional provider-specific parameters
+          ...(provider === 'google' && {
+            queryParams: {
+              access_type: 'offline',
+              prompt: 'consent'
+            }
+          }),
+          ...(provider === 'apple' && {
+            queryParams: {
+              response_mode: 'web_message'
+            }
+          })
+        }
+      });
+      
+      if (error) throw error;
+      
+      // The actual redirect happens here if successful
+    } catch (error) {
+      // Reset button state
+      btn.innerHTML = originalHtml;
+      btn.disabled = false;
+      
+      console.error(`${provider} login error:`, error);
+      alert(`Could not connect with ${provider}. Please try again.`);
+    }
+  };
+
+  // Event listeners for social buttons
+  googleLoginBtn.addEventListener('click', () => handleSocialLogin('google'));
+  facebookLoginBtn.addEventListener('click', () => handleSocialLogin('facebook'));
+  appleLoginBtn.addEventListener('click', () => handleSocialLogin('apple'));
+
+  // Add animation to form elements on load
+  document.addEventListener('DOMContentLoaded', () => {
+    const formElements = document.querySelectorAll('.login-box > *');
+    formElements.forEach((el, index) => {
+      el.style.opacity = 0;
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = `all 0.5s ease ${index * 0.1}s`;
+      setTimeout(() => {
+        el.style.opacity = 1;
+        el.style.transform = 'translateY(0)';
+      }, 100);
+    });
+  });
+</script>
 </body>
 </html>
