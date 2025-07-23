@@ -21,12 +21,28 @@
     }
 
     body {
-      margin: 0;
-      font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
-      background-color: var(--light);
-      padding-bottom: 120px;
-      color: var(--text);
-    }
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(-45deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb);
+  background-size: 400% 400%;
+  animation: gradientBG 14s ease infinite;
+  color: #1a1a1a;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
     .topbar {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
