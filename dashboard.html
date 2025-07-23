@@ -450,11 +450,7 @@
     <h1>GROCERA</h1>
   </div>
 
-  <!-- Search Bar -->
-  <div class="search-bar">
-    <i class="fas fa-search"></i>
-    <input type="text" placeholder="Search for groceries, fruits, vegetables...">
-  </div>
+
 
   <!-- Banner -->
   <div class="highlight-banner">
@@ -567,7 +563,7 @@
       </div>
 
       <div class="product-card" data-name="Maggi 2-Min Noodles" data-price="14" data-image="images/maggi.jpg">
-        <div class="badge">BULK DEAL</div>
+        <div class="badge">SAVER DEAL</div>
         <img src="maggi.jpeg">
         <h4>Maggi Noodles</h4>
         <p class="price">₹14 <span class="unit">/pack</span></p>
@@ -684,7 +680,7 @@
       <div class="badge">BEST VALUE</div>
       <img src="mop.jpeg">
       <h4>Floor Mop</h4>
-      <p class="price">₹199 <span class="unit">/piece</span></p>
+      <p class="price">₹1999 <span class="unit">/piece</span></p>
       <div class="cart-buttons">
         <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
         <span>0</span>
@@ -727,7 +723,7 @@
     
     <div class="product-card" data-name="Trash Bags" data-price="89" data-image="images/trashbag.jpg">
       <div class="badge">PACK OF 10</div>
-      <img src="trashbag.jpeg">
+      <img src="trash-bags.jpeg">
       <h4>Trash Bags</h4>
       <p class="price">₹89 <span class="unit">/10 bags</span></p>
       <div class="cart-buttons">
@@ -740,7 +736,7 @@
 
   <!-- Bottom Navigation -->
   <div class="bottom-nav">
-    <a href="dashboard.html" class="nav-item active">
+    <a href="dashboard.html" class="nav-item">
       <i class="fas fa-home"></i>
       <span>Home</span>
     </a>
@@ -748,14 +744,17 @@
       <i class="fas fa-list"></i>
       <span>Categories</span>
     </a>
-    <a href="cart.html" class="nav-item">
+    <a href="cart.html" class="nav-item active">
       <i class="fas fa-shopping-cart"></i>
       <span>Cart</span>
-      <span class="cart-count" id="cartCount">0</span>
     </a>
     <a href="payment.html" class="nav-item">
       <i class="fas fa-credit-card"></i>
       <span>Payment</span>
+    </a>
+    <a href="orders.html" class="nav-item">
+      <i class="fas fa-box"></i>
+      <span>Orders</span>
     </a>
     <a href="about.html" class="nav-item">
       <i class="fas fa-user"></i>
