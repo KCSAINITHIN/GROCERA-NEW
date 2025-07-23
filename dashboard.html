@@ -2,144 +2,329 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>GROCERA - Home</title>
+  <title>GROCERA - Fresh Groceries Delivered</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom, #ffffff, #e0ffe6);
-      overflow-x: hidden;
-      padding-bottom: 100px;
+    :root {
+      --primary: #4CAF50;
+      --primary-dark: #388E3C;
+      --primary-light: #C8E6C9;
+      --secondary: #FF9800;
+      --accent: #FF5722;
+      --dark: #333;
+      --light: #f9f9f9;
+      --gray: #757575;
+      --light-gray: #e0e0e0;
+      --white: #ffffff;
+      --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      --radius: 12px;
+      --transition: all 0.3s ease;
     }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+   body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(-45deg, #e0ffe6, #ccf5ff, #fef6ff, #b2f7ef);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  color: #222;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
     .topbar {
-      background: #3993e3;
-      color: white;
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--white);
       padding: 15px 20px;
       display: flex;
       align-items: center;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .topbar img {
       height: 40px;
       margin-right: 10px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
     }
 
     .topbar h1 {
       margin: 0;
       font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .search-bar {
+      margin: 15px 20px;
+      position: relative;
+    }
+
+    .search-bar input {
+      width: 100%;
+      padding: 12px 20px 12px 45px;
+      border: none;
+      border-radius: 30px;
+      font-size: 14px;
+      background-color: var(--white);
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    }
+
+    .search-bar i {
+      position: absolute;
+      left: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
     }
 
     .section-title {
-      font-size: 22px;
-      color: #333;
-      margin: 30px 20px 10px;
-      border-left: 6px solid #ff6f61;
-      padding-left: 10px;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--dark);
+      margin: 25px 20px 15px;
+      padding-left: 15px;
+      position: relative;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      height: 70%;
+      width: 5px;
+      background: linear-gradient(to bottom, var(--primary), var(--secondary));
+      border-radius: 5px;
+    }
+
+    .highlight-banner {
+      background: linear-gradient(135deg, #FFF9C4, #FFE082);
+      color: #5D4037;
+      padding: 12px 20px;
+      font-size: 15px;
+      font-weight: 500;
+      text-align: center;
+      margin: 10px 15px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .highlight-banner i {
+      font-size: 18px;
     }
 
     .carousel-container {
       position: relative;
       width: 100%;
-      margin: 20px 0;
+      margin: 15px 0 25px;
       overflow: hidden;
     }
 
     .carousel-wrapper {
       display: flex;
-      transition: transform 0.5s ease;
+      transition: transform 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+      padding: 0 5px;
     }
 
     .product-card {
-      min-width: 180px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+      min-width: 160px;
+      background: var(--white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
       text-align: center;
       padding: 15px;
-      margin: 0 10px;
+      margin: 0 8px;
       flex-shrink: 0;
-      transition: transform 0.3s ease;
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05);
     }
 
     .product-card:hover {
-      transform: scale(1.05);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-card .badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--accent);
+      color: white;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 10px;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     }
 
     .product-card img {
       width: 100%;
       height: 120px;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 8px;
+      margin-bottom: 10px;
+      mix-blend-mode: multiply;
     }
 
     .product-card h4 {
-      margin: 10px 0 5px;
-      color: #444444;
+      margin: 5px 0;
+      color: var(--dark);
+      font-weight: 600;
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .product-card p {
-      color: #888;
-      margin: 0;
+    .product-card .price {
+      color: var(--primary-dark);
+      font-weight: 700;
+      font-size: 16px;
+      margin: 5px 0;
+    }
+
+    .product-card .unit {
+      color: var(--gray);
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+
+    .cart-buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .cart-buttons button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+    }
+
+    .cart-buttons button:hover {
+      background-color: var(--primary-dark);
+      transform: scale(1.1);
+    }
+
+    .cart-buttons .add-btn {
+      background-color: var(--primary);
+    }
+
+    .cart-buttons .remove-btn {
+      background-color: #f44336;
+    }
+
+    .cart-buttons .remove-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    .cart-buttons span {
+      font-weight: 600;
+      margin: 0 12px;
+      min-width: 20px;
+      text-align: center;
     }
 
     .carousel-nav {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.9);
+      background: var(--white);
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      font-size: 20px;
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
       cursor: pointer;
       z-index: 1;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      box-shadow: var(--shadow);
       display: flex;
       align-items: center;
       justify-content: center;
+      color: var(--primary-dark);
+      transition: var(--transition);
+      opacity: 0.9;
     }
 
-    .carousel-nav.left { left: 10px; }
-    .carousel-nav.right { right: 10px; }
+    .carousel-nav:hover {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.1);
+      color: var(--primary);
+    }
 
-    .carousel-nav:hover { background: white; }
+    .carousel-nav.left { left: 5px; }
+    .carousel-nav.right { right: 5px; }
 
     .scroll-container {
       display: flex;
       overflow-x: auto;
       gap: 15px;
-      padding: 20px;
+      padding: 10px 20px;
       scroll-behavior: smooth;
+      scroll-padding: 0 20px;
     }
 
     .scroll-container::-webkit-scrollbar {
       display: none;
     }
 
-    .highlight-banner {
-      background: #fff3cd;
-      color: #856404;
-      padding: 10px 20px;
-      font-size: 16px;
-      font-weight: bold;
-      text-align: center;
-      margin: 10px 0;
-    }
-
     .bottom-nav {
       display: flex;
       justify-content: space-around;
-      background: white;
+      background: var(--white);
       position: fixed;
       bottom: 0;
       width: 100%;
-      padding: 10px 0;
-      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+      padding: 12px 0 10px;
+      box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+      z-index: 90;
     }
 
     .nav-item {
@@ -147,50 +332,113 @@
       flex-direction: column;
       align-items: center;
       text-decoration: none;
-      color: #888;
-      font-size: 12px;
+      color: var(--gray);
+      font-size: 11px;
+      transition: var(--transition);
+      position: relative;
     }
 
     .nav-item i {
-      font-size: 20px;
-      margin-bottom: 5px;
+      font-size: 22px;
+      margin-bottom: 3px;
+      transition: var(--transition);
     }
 
     .nav-item.active {
-      color: #007bff;
+      color: var(--primary);
     }
 
     .nav-item.active i {
-      filter: drop-shadow(0 0 6px #007bff);
-      color: #007bff;
+      color: var(--primary);
     }
 
-    .nav-item.active span {
-      color: #007bff;
+    .nav-item.active::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      width: 6px;
+      height: 6px;
+      background-color: var(--primary);
+      border-radius: 50%;
     }
 
-    .bottom-nav a:hover {
-      color: #ff6f61;
+    .nav-item span {
+      font-weight: 500;
     }
 
-    .cart-buttons {
-      margin-top: 10px;
+    .nav-item:hover {
+      color: var(--primary-dark);
+      transform: translateY(-3px);
     }
 
-    .cart-buttons button {
-      background-color: #ff6f61;
+    .nav-item .cart-count {
+      position: absolute;
+      top: -5px;
+      right: 5px;
+      background-color: var(--accent);
       color: white;
-      border: none;
-      padding: 5px 10px;
-      margin: 0 3px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
     }
 
-    .cart-buttons span {
-      font-weight: bold;
-      margin: 0 5px;
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    .toast.success {
+      background-color: var(--primary);
+    }
+
+    .toast.error {
+      background-color: #f44336;
+    }
+
+    .toast.warning {
+      background-color: #FF9800;
+    }
+
+    @media (max-width: 480px) {
+      .product-card {
+        min-width: 140px;
+        padding: 12px;
+      }
+      
+      .section-title {
+        font-size: 18px;
+        margin: 20px 15px 10px;
+      }
+      
+      .highlight-banner {
+        font-size: 14px;
+        padding: 10px 15px;
+      }
     }
   </style>
 </head>
@@ -202,211 +450,295 @@
     <h1>GROCERA</h1>
   </div>
 
-  <!-- Banner -->
-  <div class="highlight-banner">🚚 Fast Delivery | 🛒 Up to 25% Off on Fresh Items!</div>
-
-      <!-- Today's Deals -->
-<h2 class="section-title">🔥 Today's Deals</h2>
-<p class="highlight-banner">Grab the freshest fruits, kitchen essentials, and snack deals — available for a limited time only!</p>
-
-<div class="carousel-container">
-  <button class="carousel-nav left" onclick="moveCarousel(-1)">❮</button>
-  <div class="carousel-wrapper" id="dealsCarousel">
-
-    <!-- Existing Items -->
-    <div class="product-card" data-name="Watermelon" data-price="40" data-image="images/watermelon.jpg">
-      <img src="watermelon.jpeg">
-      <h4>Watermelon</h4>
-      <p>₹40</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Tomato" data-price="20" data-image="images/tomato.jpg">
-      <img src="tomato.jpeg">
-      <h4>Tomato</h4>
-      <p>₹20</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Red Apple" data-price="100" data-image="images/apple.jpg">
-      <img src="apple.jpeg">
-      <h4>Red Apple</h4>
-      <p>₹100</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Banana" data-price="45" data-image="images/banana.jpg">
-      <img src="banana.jpeg">
-      <h4>Banana</h4>
-      <p>₹45</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Orange" data-price="60" data-image="images/orange.jpg">
-      <img src="orange.jpeg">
-      <h4>Orange</h4>
-      <p>₹60</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Grapes" data-price="80" data-image="images/grapes.jpg">
-      <img src="grapes.jpeg">
-      <h4>Grapes</h4>
-      <p>₹80</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <!-- New Items Added to Today's Deals -->
-    <div class="product-card" data-name="Bread Loaf" data-price="30" data-image="images/bread.jpg">
-      <img src="bread.jpeg">
-      <h4>Bread Loaf</h4>
-      <p>₹30</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Milk 1L" data-price="55" data-image="images/milk.jpg">
-      <img src="milk.jpeg">
-      <h4>Milk (1L)</h4>
-      <p>₹55</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Maggi 2-Min Noodles" data-price="14" data-image="images/maggi.jpg">
-      <img src="maggi.jpeg">
-      <h4>Maggi Noodles</h4>
-      <p>₹14</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Dishwash Liquid" data-price="99" data-image="images/dishwash.jpg">
-      <img src="dishwash.jpeg">
-      <h4>Dishwash Liquid</h4>
-      <p>₹99</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Choco Bar Ice Cream" data-price="25" data-image="images/chocobar.jpg">
-      <img src="chocobar.jpeg">
-      <h4>Choco Bar Ice Cream</h4>
-      <p>₹25</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
-    <div class="product-card" data-name="Kitchen Tissue Roll" data-price="49" data-image="images/tissue.jpg">
-      <img src="tissue.jpeg">
-      <h4>Kitchen Tissue Roll</h4>
-      <p>₹49</p>
-      <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
-      </div>
-    </div>
-
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <i class="fas fa-search"></i>
+    <input type="text" placeholder="Search for groceries, fruits, vegetables...">
   </div>
-  <button class="carousel-nav right" onclick="moveCarousel(1)">❯</button>
-</div>
 
+  <!-- Banner -->
+  <div class="highlight-banner">
+    <i class="fas fa-bolt"></i>
+    <span>Fast Delivery | Up to 30% Off on Fresh Items!</span>
+  </div>
+
+  <!-- Today's Deals -->
+  <h2 class="section-title">Today's Deals</h2>
+  <div class="highlight-banner">
+    <i class="fas fa-fire"></i>
+    <span>Grab the freshest fruits, kitchen essentials, and snack deals — limited time only!</span>
+  </div>
+
+  <div class="carousel-container">
+    <button class="carousel-nav left" onclick="moveCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+    <div class="carousel-wrapper" id="dealsCarousel">
+
+      <div class="product-card" data-name="Watermelon" data-price="40" data-image="images/watermelon.jpg">
+        <div class="badge">20% OFF</div>
+        <img src="watermelon.jpeg">
+        <h4>Watermelon</h4>
+        <p class="price">₹40 <span class="unit">/kg</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Tomato" data-price="20" data-image="images/tomato.jpg">
+        <div class="badge">15% OFF</div>
+        <img src="tomato.jpeg">
+        <h4>Tomato</h4>
+        <p class="price">₹20 <span class="unit">/kg</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Red Apple" data-price="100" data-image="images/apple.jpg">
+        <div class="badge">BESTSELLER</div>
+        <img src="apple.jpeg">
+        <h4>Red Apple</h4>
+        <p class="price">₹100 <span class="unit">/kg</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Banana" data-price="45" data-image="images/banana.jpg">
+        <img src="banana.jpeg">
+        <h4>Banana</h4>
+        <p class="price">₹45 <span class="unit">/dozen</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Orange" data-price="60" data-image="images/orange.jpg">
+        <div class="badge">NEW</div>
+        <img src="orange.jpeg">
+        <h4>Orange</h4>
+        <p class="price">₹60 <span class="unit">/kg</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Grapes" data-price="80" data-image="images/grapes.jpg">
+        <img src="grapes.jpeg">
+        <h4>Grapes</h4>
+        <p class="price">₹80 <span class="unit">/kg</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Bread Loaf" data-price="30" data-image="images/bread.jpg">
+        <div class="badge">10% OFF</div>
+        <img src="bread.jpeg">
+        <h4>Bread Loaf</h4>
+        <p class="price">₹30 <span class="unit">/400g</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Milk 1L" data-price="55" data-image="images/milk.jpg">
+        <img src="milk.jpeg">
+        <h4>Milk (1L)</h4>
+        <p class="price">₹55 <span class="unit">/pack</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Maggi 2-Min Noodles" data-price="14" data-image="images/maggi.jpg">
+        <div class="badge">BULK DEAL</div>
+        <img src="maggi.jpeg">
+        <h4>Maggi Noodles</h4>
+        <p class="price">₹14 <span class="unit">/pack</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Dishwash Liquid" data-price="99" data-image="images/dishwash.jpg">
+        <img src="dishwash.jpeg">
+        <h4>Dishwash Liquid</h4>
+        <p class="price">₹99 <span class="unit">/500ml</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Choco Bar Ice Cream" data-price="25" data-image="images/chocobar.jpg">
+        <div class="badge">COOL DEAL</div>
+        <img src="chocobar.jpeg">
+        <h4>Choco Bar Ice Cream</h4>
+        <p class="price">₹25 <span class="unit">/piece</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+      <div class="product-card" data-name="Kitchen Tissue Roll" data-price="49" data-image="images/tissue.jpg">
+        <img src="tissue.jpeg">
+        <h4>Kitchen Tissue Roll</h4>
+        <p class="price">₹49 <span class="unit">/roll</span></p>
+        <div class="cart-buttons">
+          <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+          <span>0</span>
+          <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+
+    </div>
+    <button class="carousel-nav right" onclick="moveCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+  </div>
 
   <!-- Featured Products -->
-  <h2 class="section-title">📦 Featured Products</h2>
+  <h2 class="section-title">Featured Products</h2>
   <div class="scroll-container">
     <div class="product-card" data-name="Basmati Rice" data-price="65" data-image="images/rice.jpg">
       <img src="rice.jpeg">
       <h4>Basmati Rice</h4>
-      <p>₹65</p>
+      <p class="price">₹65 <span class="unit">/kg</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
+    
     <div class="product-card" data-name="Sunflower Oil" data-price="110" data-image="images/oil.jpg">
+      <div class="badge">SAVE ₹20</div>
       <img src="oil.jpeg">
       <h4>Sunflower Oil</h4>
-      <p>₹110</p>
+      <p class="price">₹110 <span class="unit">/1L</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
 
     <div class="product-card" data-name="Buiscuits" data-price="50" data-image="images/buiscuits.jpg">
       <img src="buiscuits.jpeg">
       <h4>Buiscuits</h4>
-      <p>QT: 8 packets</p>
-      <p>₹60</p>
+      <p class="price">₹50 <span class="unit">/pack of 8</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
 
     <div class="product-card" data-name="Lays" data-price="100" data-image="images/lays.jpeg">
+      <div class="badge">COMBO</div>
       <img src="lays.jpeg">
       <h4>Lays</h4>
-      <p>₹100</p>
+      <p class="price">₹100 <span class="unit">/3 packs</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
 
     <div class="product-card" data-name="Sugar Pack" data-price="40" data-image="images/sugar.jpg">
       <img src="sugar.jpeg">
       <h4>Sugar Pack</h4>
-      <p>₹40</p>
+      <p class="price">₹40 <span class="unit">/kg</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
   </div>
 
   <!-- Quick Accessories -->
-  <h2 class="section-title">🎯 Quick Accessories</h2>
+  <h2 class="section-title">Home Essentials</h2>
   <div class="scroll-container">
     <div class="product-card" data-name="Floor Mop" data-price="199" data-image="images/mop.jpg">
+      <div class="badge">BEST VALUE</div>
       <img src="mop.jpeg">
       <h4>Floor Mop</h4>
-      <p>₹1999</p>
+      <p class="price">₹199 <span class="unit">/piece</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
+    
     <div class="product-card" data-name="Sponge Wipe" data-price="49" data-image="images/sponge.jpg">
       <img src="sponge.jpeg">
       <h4>Sponge Wipe</h4>
-      <p>₹49</p>
+      <p class="price">₹49 <span class="unit">/pack of 2</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
+
     <div class="product-card" data-name="Duster Cloth" data-price="30" data-image="images/duster.jpg">
       <img src="duster.jpeg">
       <h4>Duster Cloth</h4>
-      <p>₹30</p>
+      <p class="price">₹30 <span class="unit">/piece</span></p>
       <div class="cart-buttons">
-        <button onclick="addToCart(this)">➕</button><span>0</span><button onclick="removeFromCart(this)">➖</button>
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    
+    <div class="product-card" data-name="Laundry Basket" data-price="249" data-image="images/basket.jpg">
+      <img src="basket.jpeg">
+      <h4>Laundry Basket</h4>
+      <p class="price">₹249 <span class="unit">/piece</span></p>
+      <div class="cart-buttons">
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
+      </div>
+    </div>
+    
+    <div class="product-card" data-name="Trash Bags" data-price="89" data-image="images/trashbag.jpg">
+      <div class="badge">PACK OF 10</div>
+      <img src="trashbag.jpeg">
+      <h4>Trash Bags</h4>
+      <p class="price">₹89 <span class="unit">/10 bags</span></p>
+      <div class="cart-buttons">
+        <button class="remove-btn" onclick="removeFromCart(this)"><i class="fas fa-minus"></i></button>
+        <span>0</span>
+        <button class="add-btn" onclick="addToCart(this)"><i class="fas fa-plus"></i></button>
       </div>
     </div>
   </div>
 
-     <!-- Bottom Navigation -->
+  <!-- Bottom Navigation -->
   <div class="bottom-nav">
     <a href="dashboard.html" class="nav-item active">
       <i class="fas fa-home"></i>
@@ -419,14 +751,11 @@
     <a href="cart.html" class="nav-item">
       <i class="fas fa-shopping-cart"></i>
       <span>Cart</span>
+      <span class="cart-count" id="cartCount">0</span>
     </a>
     <a href="payment.html" class="nav-item">
       <i class="fas fa-credit-card"></i>
       <span>Payment</span>
-    </a>
-    <a href="orders.html" class="nav-item">
-      <i class="fas fa-box"></i>
-      <span>Orders</span>
     </a>
     <a href="about.html" class="nav-item">
       <i class="fas fa-user"></i>
@@ -434,12 +763,14 @@
     </a>
   </div>
 
-  <!-- Cart Script with Messages -->
+  <!-- Toast Notification Element -->
+  <div id="toast" class="toast"></div>
+
   <script>
     // Carousel functionality
     const carousel = document.getElementById('dealsCarousel');
     const cards = document.querySelectorAll('#dealsCarousel .product-card');
-    const cardWidth = cards[0].offsetWidth + 20; // width + margin
+    const cardWidth = cards[0].offsetWidth + 16; // width + margin
     let currentPosition = 0;
     const visibleCards = Math.floor(window.innerWidth / cardWidth);
     
@@ -461,26 +792,24 @@
     carousel.style.transform = `translateX(-${currentPosition}px)`;
     
     // Auto-scroll every 5 seconds
-    setInterval(() => moveCarousel(1), 10000);
+    setInterval(() => moveCarousel(1), 5000);
 
-    function showToast(message, color = "#4caf50") {
-      const toast = document.createElement("div");
+    // Toast notification function
+    function showToast(message, type = "success") {
+      const toast = document.getElementById('toast');
       toast.textContent = message;
-      toast.style.position = "fixed";
-      toast.style.bottom = "80px";
-      toast.style.left = "50%";
-      toast.style.transform = "translateX(-50%)";
-      toast.style.background = color;
-      toast.style.color = "white";
-      toast.style.padding = "10px 20px";
-      toast.style.borderRadius = "6px";
-      toast.style.fontSize = "15px";
-      toast.style.zIndex = 9999;
-      toast.style.boxShadow = "0 2px 10px rgba(0,0,0,0.2)";
-      document.body.appendChild(toast);
+      toast.className = 'toast show ' + type;
+      
       setTimeout(() => {
-        toast.remove();
+        toast.className = 'toast';
       }, 3000);
+    }
+
+    // Update cart count in bottom nav
+    function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cartCount').textContent = totalItems || '0';
     }
 
     function addToCart(button) {
@@ -500,7 +829,8 @@
 
       localStorage.setItem("cartItems", JSON.stringify(cart));
       updateCounterForProduct(name);
-      showToast(`✅ ${name} added to cart`);
+      updateCartCount();
+      showToast(`Added ${name} to cart`, "success");
     }
 
     function removeFromCart(button) {
@@ -514,12 +844,13 @@
         cart[itemIndex].quantity -= 1;
         if (cart[itemIndex].quantity <= 0) {
           cart.splice(itemIndex, 1);
-          showToast(`🗑️ ${name} removed from cart`, "#f44336");
+          showToast(`Removed ${name} from cart`, "error");
         } else {
-          showToast(`➖ Reduced quantity of ${name}`, "#f44336");
+          showToast(`Reduced quantity of ${name}`, "warning");
         }
         localStorage.setItem("cartItems", JSON.stringify(cart));
         updateCounterForProduct(name);
+        updateCartCount();
       }
     }
 
@@ -543,9 +874,30 @@
         const counter = card.querySelector(".cart-buttons span");
         counter.textContent = item ? item.quantity : 0;
       });
+      updateCartCount();
     }
 
-    window.onload = updateAllCounters;
+    // Initialize on load
+    window.onload = function() {
+      updateAllCounters();
+      
+      // Add animation to cards when they come into view
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = 1;
+            entry.target.style.transform = 'translateY(0)';
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.product-card').forEach(card => {
+        card.style.opacity = 0;
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(card);
+      });
+    };
   </script>
 </body>
 </html>
