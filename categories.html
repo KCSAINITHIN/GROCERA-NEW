@@ -33,12 +33,27 @@
     }
 
     body {
-      background-color: #f9f9ff;
-      color: var(--dark);
-      line-height: 1.6;
-      padding-bottom: 80px;
-    }
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(-45deg, #d4fc79, #96e6a1, #a1f6f9, #e0ffe6);
+  background-size: 400% 400%;
+  animation: gradientBG 12s ease infinite;
+  color: #1e1e1e;
+  overflow-x: hidden;
+  padding-bottom: 80px;
+}
 
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
     .topbar {
       background: linear-gradient(135deg, var(--primary), var(--accent));
       color: white;
