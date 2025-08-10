@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>My Orders - GROCERA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Add Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
   <style>
     :root {
       --primary: #6C63FF;  /* Vibrant purple */
@@ -21,28 +24,27 @@
     }
 
     body {
-  margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(-45deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb);
-  background-size: 400% 400%;
-  animation: gradientBG 14s ease infinite;
-  color: #1a1a1a;
-  overflow-x: hidden;
-  padding-bottom: 80px;
-}
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(-45deg, #ffecd2, #fcb69f, #a1c4fd, #c2e9fb);
+      background-size: 400% 400%;
+      animation: gradientBG 14s ease infinite;
+      color: #1a1a1a;
+      overflow-x: hidden;
+      padding-bottom: 80px;
+    }
 
-@keyframes gradientBG {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
+    @keyframes gradientBG {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
 
     .topbar {
       background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -347,6 +349,21 @@
       font-size: 12px;
       font-weight: 600;
     }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -405,102 +422,108 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyCFu2tKa7JszwPRE7dTrG9FEX3Giw-pavc",
+        authDomain: "grocera-nithin.firebaseapp.com",
+        databaseURL: "https://grocera-nithin-default-rtdb.firebaseio.com",
+        projectId: "grocera-nithin",
+        storageBucket: "grocera-nithin.firebasestorage.app",
+        messagingSenderId: "824896008507",
+        appId: "1:824896008507:web:136d071d696f9ff190071e"
+      };
+
+      // Initialize Firebase
+      const app = firebase.initializeApp(firebaseConfig);
+      const database = firebase.database();
+      
       const debugBtn = document.getElementById('debugBtn');
       const debugOutput = document.getElementById('debugOutput');
+      const ordersList = document.getElementById('ordersList');
+      const emptyState = document.getElementById('emptyState');
 
+      // Get the current user ID (you would replace this with your actual auth logic)
+      let userId = getCurrentUserId();
+      
       debugBtn.addEventListener('click', function() {
         debugOutput.style.display = debugOutput.style.display === 'none' ? 'block' : 'none';
         displayDebugInfo();
       });
 
-      loadAndDisplayOrders();
+      // Load and display orders from Firebase
+      loadOrdersFromFirebase();
 
-      function loadAndDisplayOrders() {
-        try {
-          if (typeof localStorage === 'undefined') throw new Error('localStorage is not available');
-          const ordersJSON = localStorage.getItem('orders');
-          debugOutput.innerHTML += `<p>Raw orders data from localStorage: ${ordersJSON}</p>`;
-          if (!ordersJSON) return showEmptyState();
-
-          let orders = JSON.parse(ordersJSON);
-          if (!Array.isArray(orders)) throw new Error('Orders data is not an array');
-          
-          // If no orders in localStorage, create some sample data for demonstration
-          if (orders.length === 0) {
-            orders = generateSampleOrders();
-            localStorage.setItem('orders', JSON.stringify(orders));
-          }
-          
-          displayOrders(orders);
-        } catch (error) {
-          debugOutput.innerHTML += `<p style="color:var(--danger)">Error: ${error.message}</p>`;
-          showEmptyState();
-        }
+      function getCurrentUserId() {
+        // In a real app, you would get this from your authentication system
+        // For demo purposes, we'll use a hardcoded user ID or get from localStorage
+        return localStorage.getItem('currentUserId') || 'demo_user_1';
       }
 
-      function generateSampleOrders() {
-        const sampleOrders = [
-          {
-            orderId: 'GR' + Math.floor(Math.random() * 1000000),
-            orderDate: new Date(),
-            status: 'Delivered',
-            items: [
-              { name: 'Organic Bananas', price: 1.99, quantity: 5 },
-              { name: 'Almond Milk', price: 3.49, quantity: 2 },
-              { name: 'Whole Grain Bread', price: 2.99, quantity: 1 }
-            ],
-            totalAmount: 18.42,
-            paymentMethod: 'Credit Card'
-          },
-          {
-            orderId: 'GR' + Math.floor(Math.random() * 1000000),
-            orderDate: new Date(Date.now() - 86400000 * 2),
-            status: 'Shipped',
-            items: [
-              { name: 'Free Range Eggs', price: 4.99, quantity: 1 },
-              { name: 'Organic Spinach', price: 2.49, quantity: 3 }
-            ],
-            totalAmount: 12.46,
-            paymentMethod: 'PayPal'
-          },
-          {
-            orderId: 'GR' + Math.floor(Math.random() * 1000000),
-            orderDate: new Date(Date.now() - 86400000 * 5),
-            status: 'Processing',
-            items: [
-              { name: 'Greek Yogurt', price: 3.99, quantity: 4 },
-              { name: 'Granola', price: 5.49, quantity: 1 }
-            ],
-            totalAmount: 21.45,
-            paymentMethod: 'Credit Card'
+      function loadOrdersFromFirebase() {
+        showLoadingState();
+        
+        const ordersRef = database.ref('orders').orderByChild('userId').equalTo(userId);
+        
+        ordersRef.on('value', (snapshot) => {
+          const ordersData = snapshot.val();
+          const orders = [];
+          
+          if (ordersData) {
+            Object.keys(ordersData).forEach(key => {
+              orders.push({
+                id: key,
+                ...ordersData[key]
+              });
+            });
           }
-        ];
-        return sampleOrders;
+          
+          if (orders.length > 0) {
+            displayOrders(orders);
+          } else {
+            showEmptyState();
+          }
+        }, (error) => {
+          console.error("Error loading orders:", error);
+          debugOutput.innerHTML += `<p style="color:var(--danger)">Error loading orders: ${error.message}</p>`;
+          showEmptyState();
+        });
       }
 
       function displayDebugInfo() {
         debugOutput.innerHTML = `
           <h4 style="color:var(--primary)">Debug Information</h4>
-          <p><strong>localStorage supported:</strong> ${typeof localStorage !== 'undefined' ? 'Yes' : 'No'}</p>
-          <p><strong>Total localStorage space used:</strong> ${JSON.stringify(localStorage).length} bytes</p>
-          <button onclick="localStorage.clear(); location.reload();" style="
+          <p><strong>Current User ID:</strong> ${userId}</p>
+          <p><strong>Firebase initialized:</strong> ${app ? 'Yes' : 'No'}</p>
+          <button onclick="clearAllOrders()" style="
             padding: 8px 16px;
             background: var(--danger);
             color: white;
             border: none;
             border-radius: 6px;
             margin-top: 10px;
-          ">Clear All Data</button>
+          ">Clear All Orders (Debug)</button>
         `;
       }
 
-      function displayOrders(orders) {
-        const ordersList = document.getElementById('ordersList');
-        const emptyState = document.getElementById('emptyState');
-        ordersList.innerHTML = '';
-        if (orders.length === 0) return showEmptyState();
+      function clearAllOrders() {
+        if (confirm("Are you sure you want to delete ALL orders? This is for debugging only!")) {
+          database.ref('orders').remove()
+            .then(() => {
+              alert("All orders cleared!");
+              location.reload();
+            })
+            .catch(error => {
+              alert("Error clearing orders: " + error.message);
+            });
+        }
+      }
 
+      function displayOrders(orders) {
+        ordersList.innerHTML = '';
+        
+        // Sort orders by date (newest first)
         orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+        
         orders.forEach(order => {
           const orderElement = createOrderElement(order);
           ordersList.appendChild(orderElement);
@@ -520,31 +543,40 @@
         const status = order.status || 'Processing';
         const statusClass = getStatusClass(status);
 
-        const totalItems = order.items.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        const totalItems = order.items ? order.items.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
+
+        // Build items HTML
+        let itemsHTML = '';
+        if (order.items && order.items.length > 0) {
+          itemsHTML = order.items.map(item => `
+            <div class="order-item">
+              <span class="item-name">${item.name || 'Unknown Item'} × ${item.quantity || 1}</span>
+              <span class="item-price">₹${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
+            </div>
+          `).join('');
+        } else {
+          itemsHTML = '<div class="order-item">No items found</div>';
+        }
 
         orderElement.innerHTML = `
           <div class="order-header">
             <div>
-              <span class="order-id">Order #${order.orderId}</span>
+              <span class="order-id">Order #${order.id || 'N/A'}</span>
               <div class="order-date">${formattedDate}</div>
             </div>
             <span class="order-status ${statusClass}">${status}</span>
           </div>
           <div class="order-details">
             <div style="margin-bottom: 8px; font-size: 14px;">
-              <span class="items-count">${totalItems} ${totalItems > 1 ? 'items' : 'item'}</span>
+              <span class="items-count">${totalItems} ${totalItems !== 1 ? 'items' : 'item'}</span>
             </div>
-            ${order.items.map(item => `
-              <div class="order-item">
-                <span class="item-name">${item.name || 'Unknown Item'} × ${item.quantity || 1}</span>
-                <span class="item-price">₹${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</span>
-              </div>`).join('')}
+            ${itemsHTML}
             <div class="order-total">
               <span class="total-label">Total Amount</span>
               <span class="total-amount">₹${parseFloat(order.totalAmount || 0).toFixed(2)}</span>
             </div>
             <div class="payment-method">Paid via <span>${order.paymentMethod || 'Unknown Method'}</span></div>
-            <a href="order-details.html?orderId=${order.orderId}" class="btn-track">
+            <a href="order-details.html?orderId=${order.id}" class="btn-track">
               ${status === 'Delivered' ? 'View Details' : 'Track Order'}
             </a>
           </div>
@@ -553,8 +585,17 @@
       }
 
       function showEmptyState() {
-        document.getElementById('emptyState').classList.remove('hidden');
-        document.getElementById('ordersList').innerHTML = '';
+        emptyState.classList.remove('hidden');
+        ordersList.innerHTML = '';
+      }
+
+      function showLoadingState() {
+        ordersList.innerHTML = `
+          <div style="text-align: center; padding: 40px 20px;">
+            <div class="loading-spinner"></div>
+            <p>Loading your orders...</p>
+          </div>
+        `;
       }
 
       function getStatusClass(status) {
@@ -567,6 +608,9 @@
         if (status.includes('shipped')) return 'status-shipped';
         return 'status-processing';
       }
+
+      // Make clearAllOrders available globally for the debug button
+      window.clearAllOrders = clearAllOrders;
     });
   </script>
 </body>
